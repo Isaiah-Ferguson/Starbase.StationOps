@@ -4,9 +4,8 @@ using Starbase.StationOps.Services;
 
 namespace Starbase.StationOps.Controllers;
 
-// EXAMPLE — the five endpoints every resource needs. Copy this pattern.
 [ApiController]
-[Route("api/[controller]")]          // -> /api/sectors
+[Route("api/[controller]")]
 public class SectorsController : ControllerBase
 {
     private readonly ISectorService _sectors;
@@ -16,14 +15,12 @@ public class SectorsController : ControllerBase
         _sectors = sectors;
     }
 
-    // GET /api/sectors
     [HttpGet]
     public ActionResult<List<Sector>> GetAll()
     {
-        return Ok(_sectors.GetAll());                               // 200
+        return Ok(_sectors.GetAll());
     }
 
-    // GET /api/sectors/1
     [HttpGet("{id}")]
     public ActionResult<Sector> GetById(int id)
     {
@@ -31,13 +28,12 @@ public class SectorsController : ControllerBase
 
         if (sector == null)
         {
-            return NotFound($"No sector with id {id}.");            // 404
+            return NotFound($"No sector with id {id}.");
         }
 
-        return Ok(sector);                                          // 200
+        return Ok(sector);
     }
 
-    // POST /api/sectors
     [HttpPost]
     public ActionResult<Sector> Create(Sector sector)
     {
@@ -45,13 +41,12 @@ public class SectorsController : ControllerBase
 
         if (created == null)
         {
-            return BadRequest("A sector needs a name and a security level from 1 to 5.");   // 400
+            return BadRequest("A sector needs a name and a security level from 1 to 5.");
         }
 
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);         // 201
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
-    // PUT /api/sectors/1
     [HttpPut("{id}")]
     public ActionResult<Sector> Update(int id, Sector changes)
     {
@@ -59,20 +54,19 @@ public class SectorsController : ControllerBase
 
         if (existing == null)
         {
-            return NotFound($"No sector with id {id}.");            // 404
+            return NotFound($"No sector with id {id}.");
         }
 
         bool ok = _sectors.Update(existing, changes);
 
         if (!ok)
         {
-            return BadRequest("A sector needs a name and a security level from 1 to 5.");   // 400
+            return BadRequest("A sector needs a name and a security level from 1 to 5.");
         }
 
-        return Ok(existing);                                        // 200
+        return Ok(existing);
     }
 
-    // DELETE /api/sectors/1
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
@@ -80,10 +74,10 @@ public class SectorsController : ControllerBase
 
         if (sector == null)
         {
-            return NotFound($"No sector with id {id}.");            // 404
+            return NotFound($"No sector with id {id}.");
         }
 
         _sectors.Delete(sector);
-        return NoContent();                                         // 204
+        return NoContent();
     }
 }

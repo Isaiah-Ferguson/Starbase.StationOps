@@ -3,7 +3,6 @@ using Starbase.StationOps.Models;
 
 namespace Starbase.StationOps.Repositories;
 
-// EXAMPLE — the only class that touches the Sectors table.
 public class SectorRepository : ISectorRepository
 {
     private readonly AppDbContext _db;
@@ -25,8 +24,6 @@ public class SectorRepository : ISectorRepository
 
     public Sector Add(Sector sector)
     {
-        sector.Id = 0;                  // the database picks the id
-
         _db.Sectors.Add(sector);
         _db.SaveChanges();
         return sector;
@@ -34,8 +31,6 @@ public class SectorRepository : ISectorRepository
 
     public void Update(Sector sector)
     {
-        // The sector came out of the database through GetById, so EF Core
-        // is already watching it. Saving writes the changes.
         _db.SaveChanges();
     }
 

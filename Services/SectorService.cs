@@ -3,7 +3,6 @@ using Starbase.StationOps.Repositories;
 
 namespace Starbase.StationOps.Services;
 
-// EXAMPLE — the rules for sectors. It never touches the database; it asks the repository.
 public class SectorService : ISectorService
 {
     private readonly ISectorRepository _repository;
@@ -52,7 +51,6 @@ public class SectorService : ISectorService
         _repository.Delete(sector);
     }
 
-    // The rules, in one place: a sector needs a name, and a security level from 1 to 5.
     private bool IsValid(Sector sector)
     {
         if (string.IsNullOrWhiteSpace(sector.Name))
