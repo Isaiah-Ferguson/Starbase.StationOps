@@ -21,7 +21,7 @@ namespace Starbase.StationOps.Controllers
         public ActionResult<List<CrewMemberReadDto>> GetAll()
         {
             return Ok(_members.GetAll()); 
-        }
+        }//end GetAll
         [HttpGet("GetById/{id}")]
         public ActionResult<CrewMemberReadDto> GetById(int id){
             CrewMemberReadDto? member = _members.GetById(id); 
@@ -30,7 +30,7 @@ namespace Starbase.StationOps.Controllers
                 return NotFound($"No Crew Member with id {id} was found");
             }
             return Ok(member); 
-        }
+        } //end of GetById
 
         [HttpPost("AddMember")]
         public ActionResult<CrewMemberReadDto> Create([FromBody] CrewMemberCreateDto member)
@@ -41,7 +41,7 @@ namespace Starbase.StationOps.Controllers
                 return Conflict($"There is already a Crew Member named {member.Name}");
             }
             return CreatedAtAction(nameof(GetById), new {id = created.Id}, created); 
-        }
+        }//end of create
 
         [HttpPut("{id}/edit")]
         public ActionResult<CrewMemberReadDto> Edit(int id, [FromBody] CrewMemberReadDto member)
@@ -69,7 +69,7 @@ namespace Starbase.StationOps.Controllers
             }
             _members.Delete(id);
             return NoContent(); 
-        }
+        }//end of delete
 
         
     } //end of class
