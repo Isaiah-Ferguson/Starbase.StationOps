@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Starbase.StationOps;
 using Starbase.StationOps.Data;
 using Starbase.StationOps.Repositories;
 using Starbase.StationOps.Services;
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<ISectorService, SectorService>();
+
+builder.Services.AddScoped<IShipsService, ShipsService>();
 
 var app = builder.Build();
 
