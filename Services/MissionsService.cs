@@ -1,0 +1,111 @@
+using Starbase.StationOps.DTOs;
+using Starbase.StationOps.Models;
+using Starbase.StationOps.Repositories;
+namespace Starbase.StationOps.Services
+{
+    public class MissionsService : IMissionsService
+    {
+        private readonly IMissionsRepository _mission;
+        public MissionsService(IMissionsRepository mission)
+        {
+            _mission = mission;
+        }
+
+         public List<MissionsReadDTO> GetAll()
+    {
+        return _mission.GetAll()
+            .OrderBy(s => s.Title)
+            .Select(ToReadDTO) // Turn every model into a DTO.
+            .ToList();
+    }
+
+      public MissionsReadDTO? GetById(int id)
+    {
+            Missions? missions = _mission.GetById(id);
+
+            if (missions is null)
+            {
+                return null;
+            }
+
+            return ToReadDTO(missions);
+        }
+
+      public MissionsReadDTO? Create(MissionsCreateDTO dto)
+    {
+        bool exists = _mission.GetAll().Any(s =>
+            string.Equals(s.Title, dto.Title, StringComparison.OrdinalIgnoreCase));
+
+            if (exists)
+            {
+                return null;
+            }
+
+            Missions missions = new Missions();
+            missions.Title = dto.Title;
+            missions.ShipId = dto.ShipId;
+            missions.Status = dto.Status;
+
+              Missions created = _mission.Add(missions);
+
+            return ToReadDTO(created);
+    }
+
+       public bool Update(int id, MissionsCreateDTO dto)
+    {
+        Missions? existingMission = _mission.GetById(id);
+
+        if (existingMission is null)
+        {
+            return false;
+        }
+
+        existingMission.Title = dto.Title;
+        existingMission.ShipId = dto.ShipId;
+        existingMission.Status = dto.Status;
+
+        _mission.Update(existingMission);
+        return true;
+    }
+
+     public void Delete(int id)
+        {
+            Missions? supply = _mission.GetById(id);
+            // if not null (i.e is found when ID is entered, will delete record)
+            if (supply != null)
+            {
+                _mission.Delete(supply);
+            }
+        }
+ private static MissionsReadDTO ToReadDTO(Missions missions)
+        {
+            MissionsReadDTO outputDTO = new MissionsReadDTO();
+            outputDTO.Id = missions.Id;
+            outputDTO.Title = missions.Title;
+            outputDTO.ShipId = missions.ShipId;
+            outputDTO.Status = missions.Status;
+
+            return outputDTO;
+
+        }
+private bool IsValid(Missions mission)
+    {
+        if (mission is null)
+        {
+            return false;
+        }
+
+        if (mission is null || string.IsNullOrWhiteSpace(mission.Title))
+        {
+            return false;
+        }
+
+        if (mission.Status == "Complete")
+        {
+            return false;
+        }
+
+        return true;
+    }
+    }
+}
