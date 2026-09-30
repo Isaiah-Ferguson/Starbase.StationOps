@@ -21,5 +21,53 @@ namespace Starbase.StationOps.Services
         {
             return _repository.GetById(id);
         }
+
+        public Visitors? Create(Visitors newVisitor)
+        {
+            if (!IsValid(newVisitor))
+            {
+                return null;
+            }
+
+            return _repository.Add(newVisitor);
+        }
+
+        public bool Update(Visitors exsisting, Visitors changes)
+        {
+            if (!IsValid(changes))
+            {
+                return false;
+            }
+
+            exsisting.Name = changes.Name;
+            exsisting.HomePlanet = changes.HomePlanet;
+            exsisting.IsCleared = changes.IsCleared;
+            exsisting.ShipId = changes.ShipId;
+
+            _repository.Update(exsisting);
+
+            return true;
+        }
+
+        public void Delete(Visitors visitor)
+        {
+            _repository.Delete(visitor);
+        }
+
+
+        private bool IsValid(Visitors visitor)
+        {
+            if (string.IsNullOrWhiteSpace(visitor.Name))
+            {
+                return false;
+            }
+
+            if (visitor.IsCleared == false)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

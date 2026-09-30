@@ -13,6 +13,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<ISectorService, SectorService>();
 
+builder.Services.AddScoped<IVisitorRepository, VisitorRepository>();
+builder.Services.AddScoped<IVisitorServices, VisitorServices>();
+
 var app = builder.Build();
 
 app.MapControllers();
