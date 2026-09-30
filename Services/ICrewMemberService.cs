@@ -11,7 +11,7 @@ namespace Starbase.StationOps.Services
         List<CrewMemberReadDto> GetAll(); 
         CrewMemberReadDto? GetById(int id); 
         CrewMemberReadDto? Create(CrewMemberCreateDto newCrewMember);
-        bool Edit(int id, CrewMemberCreateDto editMember);
+        bool Edit(int id, CrewMemberReadDto editMember);
         void Delete(int id); 
         
     }

@@ -48,23 +48,24 @@ namespace Starbase.StationOps.Services
             member.Name = newCrewMember.Name;
             member.Role = newCrewMember.Role; 
             member.IsOnDuty = newCrewMember.IsOnDuty; 
-
+            member.ShipId = 0; 
             CrewMember created = _repo.Add(member); 
             return ToReadDto(member); 
 
 
         }//end of Create
 
-        public bool Edit(int id, CrewMemberCreateDto editMember)
+        public bool Edit(int id, CrewMemberReadDto editMember)
         {
             CrewMember? existing = _repo.GetById(id);
-            if(existing is null)
+            if(existing is null || !isValid(editMember))
             {
                 return false;
             }
             existing.Name = editMember.Name;
             existing.Role = editMember.Role;
-            existing.IsOnDuty = editMember.IsOnDuty; 
+            existing.IsOnDuty = editMember.IsOnDuty;
+            existing.ShipId = editMember.ShipId;  
             _repo.Update(existing);
             return true; 
         } //end of Edit
@@ -88,5 +89,22 @@ namespace Starbase.StationOps.Services
 
             return outputDto; 
         }//end of ToReadDto
+        private bool isValid(CrewMemberReadDto member)
+        {
+            if (string.IsNullOrWhiteSpace(member.Name))
+            {
+                return false; 
+            }
+             if (string.IsNullOrWhiteSpace(member.Role))
+            {
+                return false; 
+            }
+            if(member.ShipId < 0)
+            {
+                return false; 
+            }
+
+            return true; 
+        }
     } //end of class
 }//end of namespace
