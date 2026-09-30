@@ -13,6 +13,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<ISectorService, SectorService>();
 
+builder.Services.AddScoped<IDockingBayService, DockingBayService>();
+builder.Services.AddScoped<IDockingBayRepository, DockingBayRepository>();
+
 var app = builder.Build();
 
 app.MapControllers();
