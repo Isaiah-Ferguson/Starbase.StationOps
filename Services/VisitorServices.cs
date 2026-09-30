@@ -7,7 +7,7 @@ namespace Starbase.StationOps.Services
     {
 
         private readonly IVisitorRepository _repository;
-        public VisitorServices(IVisitorRepository repository )
+        public VisitorServices(IVisitorRepository repository)
         {
             _repository = repository;
         }
@@ -24,10 +24,15 @@ namespace Starbase.StationOps.Services
 
         public Visitors? Create(Visitors newVisitor)
         {
+
+
+
+
             if (!IsValid(newVisitor))
             {
                 return null;
             }
+            newVisitor.IsCleared = false;
 
             return _repository.Add(newVisitor);
         }
