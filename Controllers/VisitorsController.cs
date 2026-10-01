@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Starbase.StationOps.DTOs;
 using Starbase.StationOps.Models;
 using Starbase.StationOps.Services;
 
@@ -17,7 +18,7 @@ namespace Starbase.StationOps.Controllers
 
         [HttpGet]
 
-        public ActionResult <List<Visitors>> GetAll()
+        public ActionResult <List<VisitorReadDTO>> GetAll()
         {
             return Ok(_visitors.GetAll());
         }

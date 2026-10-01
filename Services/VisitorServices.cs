@@ -1,3 +1,4 @@
+using Starbase.StationOps.DTOs;
 using Starbase.StationOps.Models;
 using Starbase.StationOps.Repositories;
 
@@ -12,12 +13,12 @@ namespace Starbase.StationOps.Services
             _repository = repository;
         }
 
-        public List<Visitors> GetAll()
+        public List<VisitorReadDTO> GetAll()
         {
             return _repository.GetAll().OrderBy(v => v.Name).ToList();
         }
 
-        public Visitors? GetById(int id)
+        public VisitorReadDTO? GetById(int id)
         {
             return _repository.GetById(id);
         }
@@ -73,6 +74,19 @@ namespace Starbase.StationOps.Services
             }
 
             return true;
+        }
+
+        private static VisitorReadDTO ToReadDTO(Visitors visitors)
+        {
+            VisitorReadDTO outputDTO = new VisitorReadDTO();
+
+           outputDTO.Id = visitors.Id;
+            outputDTO.Name = visitors.Name;
+           outputDTO.HomePlanet = visitors.HomePlanet;
+            outputDTO.IsCleared = visitors.IsCleared;
+            outputDTO.ShipId = visitors.ShipId;
+
+            return outputDTO;
         }
     }
 }

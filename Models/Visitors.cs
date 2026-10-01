@@ -11,5 +11,7 @@ namespace Starbase.StationOps.Models
         public int ShipId {get;set;}
 
         public bool IsCleared {get;set;}
+
+        public string StorageLocation {get;set;} = string.Empty;
     }
 }
