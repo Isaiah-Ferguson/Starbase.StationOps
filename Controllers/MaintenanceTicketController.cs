@@ -30,7 +30,7 @@ public class MaintenanceTicketController : ControllerBase
 
         if (ticket == null)
         {
-            return NotFound($"No sector with id {id}.");
+            return NotFound($"No ship with id {id}.");
         }
 
         return Ok(ticket);
@@ -43,7 +43,7 @@ public class MaintenanceTicketController : ControllerBase
 
         if (created == null)
         {
-            return BadRequest("A sector needs a name and a security level from 1 to 5.");
+            return BadRequest("A ship needs to have an ID and description.");
         }
 
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
