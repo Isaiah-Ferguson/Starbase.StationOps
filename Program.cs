@@ -27,6 +27,9 @@ builder.Services.AddScoped<IShipsRepository, ShipsRepository>();
 builder.Services.AddScoped<IMaintenanceTicketService, MaintenanceTicketService>();
 builder.Services.AddScoped<IMaintenanceTicketRepository, MaintenanceTicketRepository>();
 
+builder.Services.AddScoped<IVisitorRepository, VisitorRepository>();
+builder.Services.AddScoped<IVisitorServices, VisitorServices>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

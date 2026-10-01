@@ -10,6 +10,8 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Sector> Sectors { get; set; }
+
+    public DbSet<Visitors> Visitors {get;set;}
     public DbSet<DockingBay> DockingBay {get; set;}
     public DbSet<MaintenanceTicket> Maintain { get; set; }
 
