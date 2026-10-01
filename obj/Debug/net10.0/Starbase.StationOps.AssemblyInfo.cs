@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Starbase.StationOps")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f9f6ca1140095d583a4604f6540f125f3965fb1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9584b8ff5b1e848bda18096cfab81b5056604cb6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Starbase.StationOps")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Starbase.StationOps")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
