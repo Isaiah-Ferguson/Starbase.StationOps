@@ -15,35 +15,58 @@ namespace Starbase.StationOps.Services
 
         public List<VisitorReadDTO> GetAll()
         {
-            return _repository.GetAll().OrderBy(v => v.Name).ToList();
+            return _repository.GetAll().OrderBy(v => v.Name).Select(v => ToReadDTO(v)).ToList();
         }
 
         public VisitorReadDTO? GetById(int id)
         {
-            return _repository.GetById(id);
-        }
+            Visitors? visitor = _repository.GetById(id);
 
-        public Visitors? Create(Visitors newVisitor)
-        {
-
-
-
-
-            if (!IsValid(newVisitor))
+            if (visitor == null)
             {
                 return null;
             }
-            newVisitor.IsCleared = false;
 
-            return _repository.Add(newVisitor);
+            return ToReadDTO(visitor);
         }
 
-        public bool Update(Visitors exsisting, Visitors changes)
+        public VisitorReadDTO? Create(VisitorCreateDTO dto)
+        {
+
+            bool exsists = _repository.GetAll().Any(v => v.Name.ToLower() == dto.Name.ToLower());
+
+
+            if (exsists)
+            {
+                return null;
+            }
+
+
+            Visitors visitor = new Visitors();
+
+            visitor.Name = dto.Name;
+            visitor.HomePlanet = dto.HomePlanet;
+            visitor.IsCleared = dto.IsCleared;
+            visitor.ShipId = dto.ShipId;
+            visitor.StorageLocation = "Visitors List";
+
+
+            Visitors created = _repository.Add(visitor);
+
+            return ToReadDTO(created);
+
+
+
+        }
+
+        public bool Update(int id, Visitors changes)
         {
             if (!IsValid(changes))
             {
                 return false;
             }
+
+            Visitors? exsisting = _repository.GetById(id);
 
             exsisting.Name = changes.Name;
             exsisting.HomePlanet = changes.HomePlanet;
@@ -55,9 +78,17 @@ namespace Starbase.StationOps.Services
             return true;
         }
 
-        public void Delete(Visitors visitor)
+        public void Delete(int id)
         {
-            _repository.Delete(visitor);
+            Visitors? exsisting = _repository.GetById(id);
+
+         if (exsisting != null)
+            {
+                 _repository.Delete(exsisting);
+            }
+
+
+           
         }
 
 
@@ -80,9 +111,9 @@ namespace Starbase.StationOps.Services
         {
             VisitorReadDTO outputDTO = new VisitorReadDTO();
 
-           outputDTO.Id = visitors.Id;
+            outputDTO.Id = visitors.Id;
             outputDTO.Name = visitors.Name;
-           outputDTO.HomePlanet = visitors.HomePlanet;
+            outputDTO.HomePlanet = visitors.HomePlanet;
             outputDTO.IsCleared = visitors.IsCleared;
             outputDTO.ShipId = visitors.ShipId;
 

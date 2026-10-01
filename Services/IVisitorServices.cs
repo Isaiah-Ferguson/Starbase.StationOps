@@ -7,8 +7,8 @@ namespace Starbase.StationOps.Services
     {
         List<VisitorReadDTO> GetAll();
     VisitorReadDTO? GetById(int id);
-    Visitors? Create(Visitors newVisitor);             
-    bool Update(Visitors existing, Visitors changes);
-    void Delete(Visitors visitor);
+    VisitorReadDTO? Create(VisitorCreateDTO newVisitor);             
+    bool Update(int id , Visitors changes);
+    void Delete(int id );
     }
 }

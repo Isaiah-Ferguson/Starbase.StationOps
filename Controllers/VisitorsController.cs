@@ -25,9 +25,9 @@ namespace Starbase.StationOps.Controllers
 
         [HttpGet("{id}")]
 
-        public ActionResult<Visitors> GetById(int id)
+        public ActionResult<VisitorReadDTO> GetById(int id)
         {
-            Visitors? visitor = _visitors.GetById(id);
+            VisitorReadDTO? visitor = _visitors.GetById(id);
 
             if(visitor == null)
             {
@@ -39,9 +39,9 @@ namespace Starbase.StationOps.Controllers
 
         [HttpPost]
 
-        public ActionResult<Visitors> Create(Visitors newVisitor)
+        public ActionResult<VisitorReadDTO> Create([FromBody] VisitorCreateDTO newVisitor)
         {
-            Visitors? created = _visitors.Create(newVisitor);
+            VisitorReadDTO? created = _visitors.Create(newVisitor);
 
             if(created == null)
             {
@@ -53,16 +53,16 @@ namespace Starbase.StationOps.Controllers
 
         [HttpPut("{id}")]
 
-        public ActionResult<Visitors> Update(int id, Visitors changes)
+        public ActionResult<VisitorReadDTO> Update(int id, Visitors changes)
         {
-            Visitors? existing = _visitors.GetById(id);
+            VisitorReadDTO? existing = _visitors.GetById(id);
 
             if (existing == null)
             {
                 return NotFound($"No visitor found with id {id}.");
             }
 
-            bool ok = _visitors.Update(existing, changes);
+            bool ok = _visitors.Update(id, changes);
 
             if (!ok)
             {
@@ -77,14 +77,14 @@ namespace Starbase.StationOps.Controllers
 
         public IActionResult  Delete(int id)
         {
-            Visitors? visitor = _visitors.GetById(id);
+            VisitorReadDTO? visitor = _visitors.GetById(id);
 
             if (visitor == null)
             {
                 return NotFound($"No visitor found with id {id}");
             }
 
-            _visitors.Delete(visitor);
+            _visitors.Delete(id);
 
             return NoContent();
         }
