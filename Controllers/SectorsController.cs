@@ -47,7 +47,7 @@ public class SectorsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
-    [HttpPut("{id}")]
+     [HttpPut("{id}")]
     public ActionResult<Sector> Update(int id, Sector changes)
     {
         Sector? existing = _sectors.GetById(id);
