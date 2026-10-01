@@ -11,10 +11,10 @@ namespace Starbase.StationOps
 
        Ship? GetById(int id);
 
-       Ship Add(Ship newShip);
+       Ship Add(Ship ship);
 
-       void Update(Ship newShip);
+       void Update(Ship ship);
 
-       void Delete(Ship newShip);
+       void Delete(Ship ship);
     }
 }

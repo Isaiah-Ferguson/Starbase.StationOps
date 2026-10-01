@@ -15,6 +15,7 @@ builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<ISectorService, SectorService>();
 
 builder.Services.AddScoped<IShipsService, ShipsService>();
+builder.Services.AddScoped<IShipsRepository, ShipsRepository>();
 
 var app = builder.Build();
 

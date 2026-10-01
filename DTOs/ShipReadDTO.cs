@@ -9,9 +9,9 @@ namespace Starbase.StationOps
     {
         public int Id {get; set; }
 
-        public string Name {get; set; } 
+        public string Name {get; set; } = string.Empty;
 
-        public string Captain {get; set; }
+        public string Captain {get; set; } = string.Empty;
 
         public int FuelPercent {get; set; }
     }

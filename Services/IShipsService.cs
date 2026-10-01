@@ -8,13 +8,9 @@ namespace Starbase.StationOps
     public interface IShipsService
     {
       List<ShipReadDTO> GetAll();  
-
       ShipReadDTO? GetById(int id);
-
-      ShipCreateDTO Create(ShipCreateDTO newShip);
-
-      bool Update(Ship existing, Ship changes);
-
+      ShipReadDTO Create(ShipCreateDTO ship);
+      bool Update(int id, Ship changes);
       void Delete(int id);
     }
 }

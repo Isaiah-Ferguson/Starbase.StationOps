@@ -56,9 +56,21 @@ namespace Starbase.StationOps
         }
 
         //Update
-        public bool Update(Ship existing, Ship changes)
+        public bool Update(int id, Ship changes)
         {
-        
+            Ship? ship = _shipsrepository.GetById(id);
+
+            if (ship == null)
+            {
+                return false;
+            }
+
+            ship.Name = changes.Name;
+            ship.Captain = changes.Captain;
+            ship.FuelPercent = changes.FuelPercent;
+
+            _shipsrepository.Update(ship);
+            return true;
         }
 
         //Delete
@@ -83,9 +95,6 @@ namespace Starbase.StationOps
 
             return outputDTO;
         }
-
-        //Validation
-
 
     }
 }

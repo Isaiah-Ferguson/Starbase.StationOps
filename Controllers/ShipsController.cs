@@ -39,10 +39,9 @@ namespace Starbase.StationOps
         }
 
         [HttpPost("Create")]
-
         public ActionResult<ShipReadDTO> Create([FromBody] ShipCreateDTO ship)
         {
-            ShipCreateDTO? created = _ship.Create(ship);
+            ShipReadDTO? created = _ship.Create(ship);
 
             if (created == null)
             {
@@ -52,5 +51,42 @@ namespace Starbase.StationOps
             return CreatedAtAction(nameof(GetById), new {id = created.Id}, created);
         }
 
+        [HttpPut("Update/{id}")]
+
+        public ActionResult Update(int id, Ship changes)
+        {
+           ShipReadDTO? existing = _ship.GetById(id);
+
+            if (existing == null)
+            {
+                return NotFound("This Ship Does Not Exist......");
+            }
+
+            bool update = _ship.Update(id, changes);
+
+            if (!update)
+            {
+                return BadRequest("An error has occured....");
+            }
+
+            return NoContent(); 
+        }
+
+        [HttpDelete("Delete/{id}")]
+        
+        public IActionResult Delete(int id)
+        {
+
+            if (_ship.GetById(id) == null)
+            {
+                return NotFound($"No ship was here......");
+            }
+
+            _ship.Delete(id);
+            return NoContent();
+        }
+
     }
 }
+
+       
