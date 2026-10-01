@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Starbase.StationOps;
 using Starbase.StationOps.Data;
 using Starbase.StationOps.Repositories;
 using Starbase.StationOps.Services;
@@ -17,6 +18,9 @@ builder.Services.AddScoped<IMissionsService, MissionsService>();
 
 builder.Services.AddScoped<ICrewMemberRepository, CrewMemberRepository>();
 builder.Services.AddScoped<ICrewMemberService, CrewMemberService>(); 
+
+builder.Services.AddScoped<IShipsService, ShipsService>();
+builder.Services.AddScoped<IShipsRepository, ShipsRepository>();
 
 var app = builder.Build();
 
