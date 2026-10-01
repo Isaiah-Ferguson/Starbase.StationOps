@@ -7,7 +7,7 @@ namespace Starbase.StationOps.Services
         List<MissionsReadDTO> GetAll();
         MissionsReadDTO? GetById(int id);
         MissionsReadDTO? Create(MissionsCreateDTO dto);
-        bool Update(int id, MissionsCreateDTO dto);
+        bool Update(int id, MissionsCreateDTO changes);
         void Delete(int id);
     }
 }

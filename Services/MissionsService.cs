@@ -11,16 +11,16 @@ namespace Starbase.StationOps.Services
             _mission = mission;
         }
 
-         public List<MissionsReadDTO> GetAll()
-    {
-        return _mission.GetAll()
-            .OrderBy(s => s.Title)
-            .Select(ToReadDTO) // Turn every model into a DTO.
-            .ToList();
-    }
+        public List<MissionsReadDTO> GetAll()
+        {
+            return _mission.GetAll()
+                .OrderBy(s => s.Title)
+                .Select(ToReadDTO) // Turn every model into a DTO.
+                .ToList();
+        }
 
-      public MissionsReadDTO? GetById(int id)
-    {
+        public MissionsReadDTO? GetById(int id)
+        {
             Missions? missions = _mission.GetById(id);
 
             if (missions is null)
@@ -31,10 +31,9 @@ namespace Starbase.StationOps.Services
             return ToReadDTO(missions);
         }
 
-      public MissionsReadDTO? Create(MissionsCreateDTO dto)
-    {
-        bool exists = _mission.GetAll().Any(s =>
-            string.Equals(s.Title, dto.Title, StringComparison.OrdinalIgnoreCase));
+        public MissionsReadDTO? Create(MissionsCreateDTO dto)
+        {
+            bool exists = _mission.GetAll().Any(s => string.Equals(s.Title, dto.Title, StringComparison.OrdinalIgnoreCase));
 
             if (exists)
             {
@@ -46,29 +45,31 @@ namespace Starbase.StationOps.Services
             missions.ShipId = dto.ShipId;
             missions.Status = dto.Status;
 
-              Missions created = _mission.Add(missions);
+            Missions created = _mission.Add(missions);
 
             return ToReadDTO(created);
-    }
-
-       public bool Update(int id, MissionsCreateDTO dto)
-    {
-        Missions? existingMission = _mission.GetById(id);
-
-        if (existingMission is null)
-        {
-            return false;
         }
 
-        existingMission.Title = dto.Title;
-        existingMission.ShipId = dto.ShipId;
-        existingMission.Status = dto.Status;
+        public bool Update(int id, MissionsCreateDTO dto)
+        {
+            Missions? existingMission = _mission.GetById(id);
 
-        _mission.Update(existingMission);
-        return true;
-    }
+            if (existingMission is null ||
+                string.Equals(existingMission.Status, "Complete", StringComparison.OrdinalIgnoreCase) ||
+                !IsValid(dto))
+            {
+                return false;
+            }
 
-     public void Delete(int id)
+            existingMission.Title = dto.Title;
+            existingMission.ShipId = dto.ShipId;
+            existingMission.Status = dto.Status;
+
+            _mission.Update(existingMission);
+            return true;
+        }
+
+        public void Delete(int id)
         {
             Missions? supply = _mission.GetById(id);
             // if not null (i.e is found when ID is entered, will delete record)
@@ -77,7 +78,7 @@ namespace Starbase.StationOps.Services
                 _mission.Delete(supply);
             }
         }
- private static MissionsReadDTO ToReadDTO(Missions missions)
+        private static MissionsReadDTO ToReadDTO(Missions missions)
         {
             MissionsReadDTO outputDTO = new MissionsReadDTO();
             outputDTO.Id = missions.Id;
@@ -88,24 +89,19 @@ namespace Starbase.StationOps.Services
             return outputDTO;
 
         }
-private bool IsValid(Missions mission)
-    {
-        if (mission is null)
+        private static bool IsValid(MissionsCreateDTO dto)
         {
-            return false;
-        }
+            if (dto is null)
+            {
+                return false;
+            }
 
-        if (mission is null || string.IsNullOrWhiteSpace(mission.Title))
-        {
-            return false;
-        }
+            if (string.IsNullOrWhiteSpace(dto.Title))
+            {
+                return false;
+            }
 
-        if (mission.Status == "Complete")
-        {
-            return false;
+            return true;
         }
-
-        return true;
-    }
     }
 }

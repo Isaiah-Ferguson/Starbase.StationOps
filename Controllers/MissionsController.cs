@@ -1,7 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Starbase.StationOps.DTOs;
-using Starbase.StationOps.Models;
 using Starbase.StationOps.Services;
 
 namespace Starbase.StationOps.Controllers
@@ -41,7 +40,7 @@ namespace Starbase.StationOps.Controllers
 
         if (created == null)
         {
-            return BadRequest("Missions need a Title, a Ship Id, and a Status. ");
+            return BadRequest("Missions need a Title with fewer than 60 characters, a Ship Id, and a Status of 'Planned', 'Active', or 'Complete'. ");
         }
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
@@ -53,10 +52,34 @@ namespace Starbase.StationOps.Controllers
 
         if (!updated)
         {
-            return NotFound($"No mission with id {id}.");
+            MissionsReadDTO? existingMission = _mission.GetById(id);
+            if (existingMission is null)
+            {
+                return NotFound($"No mission with id {id}.");
+            }
+
+            if (string.Equals(existingMission.Status, "Complete", StringComparison.OrdinalIgnoreCase))
+            {
+                return Conflict("Completed missions cannot be edited.");
+            }
+
+            return BadRequest("Invalid mission data.");
         }
 
         return Ok(updated);
+    }
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        MissionsReadDTO? mission = _mission.GetById(id);
+
+        if (mission == null)
+        {
+            return NotFound($"No mission with id {id}.");
+        }
+
+        _mission.Delete(mission.Id);
+        return NoContent();
     }
     }
 }
