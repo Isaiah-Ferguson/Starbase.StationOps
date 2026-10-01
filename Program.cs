@@ -19,6 +19,8 @@ builder.Services.AddScoped<IMissionsService, MissionsService>();
 builder.Services.AddScoped<ICrewMemberRepository, CrewMemberRepository>();
 builder.Services.AddScoped<ICrewMemberService, CrewMemberService>(); 
 
+builder.Services.AddScoped<IDockingBayService, DockingBayService>();
+builder.Services.AddScoped<IDockingBayRepository, DockingBayRepository>();
 builder.Services.AddScoped<IShipsService, ShipsService>();
 builder.Services.AddScoped<IShipsRepository, ShipsRepository>();
 
