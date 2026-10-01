@@ -11,4 +11,5 @@ public class AppDbContext : DbContext
 
     public DbSet<Sector> Sectors { get; set; }
     public DbSet<CrewMember> CrewMembers {get; set;}
+    public DbSet<Missions> Missions {get;set;}
 }
