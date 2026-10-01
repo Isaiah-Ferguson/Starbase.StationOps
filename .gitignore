@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 visitors.db
 
 appsettings.json
+*.db

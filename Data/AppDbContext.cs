@@ -12,4 +12,9 @@ public class AppDbContext : DbContext
     public DbSet<Sector> Sectors { get; set; }
 
     public DbSet<Visitors> Visitors {get;set;}
+    public DbSet<MaintenanceTicket> Maintain { get; set; }
+
+    public DbSet<Ship> Ships { get; set; }
+    public DbSet<CrewMember> CrewMembers {get; set;}
+    public DbSet<Missions> Missions {get;set;}
 }
