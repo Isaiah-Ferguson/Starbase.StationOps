@@ -10,25 +10,25 @@ namespace Starbase.StationOps
     [Route("api/[controller]")]
     public class ShipsController : ControllerBase
     {
-        private readonly IShipsService _ship;
+        private readonly IShipsService _shipstuff;
 
-        public ShipsController (IShipsService ship)
+        public ShipsController (IShipsService shipstuff)
         {
-            _ship = ship;
+            _shipstuff = shipstuff;
         }
 
         [HttpGet("GetAll")]
 
-        public ActionResult<List<Ship>> GetAll()
+        public ActionResult<List<ShipReadDTO>> GetAll()
         {
-            return Ok(_ship.GetAll());
+            return Ok(_shipstuff.GetAll());
         }
 
         [HttpGet("GetById/{id}")]
 
         public ActionResult<ShipReadDTO> GetById(int id)
         {
-            ShipReadDTO? shipId = _ship.GetById(id);
+            ShipReadDTO? shipId = _shipstuff.GetById(id);
 
             if (shipId == null)
             {
@@ -39,9 +39,9 @@ namespace Starbase.StationOps
         }
 
         [HttpPost("Create")]
-        public ActionResult<ShipReadDTO> Create([FromBody] ShipCreateDTO ship)
+        public ActionResult<ShipReadDTO> Create([FromBody] ShipCreateDTO shipstuff)
         {
-            ShipReadDTO? created = _ship.Create(ship);
+            ShipReadDTO? created = _shipstuff.Create(shipstuff);
 
             if (created == null)
             {
@@ -55,14 +55,14 @@ namespace Starbase.StationOps
 
         public ActionResult Update(int id, Ship changes)
         {
-           ShipReadDTO? existing = _ship.GetById(id);
+           ShipReadDTO? existing = _shipstuff.GetById(id);
 
             if (existing == null)
             {
                 return NotFound("This Ship Does Not Exist......");
             }
 
-            bool update = _ship.Update(id, changes);
+            bool update = _shipstuff.Update(id, changes);
 
             if (!update)
             {
@@ -77,12 +77,12 @@ namespace Starbase.StationOps
         public IActionResult Delete(int id)
         {
 
-            if (_ship.GetById(id) == null)
+            if (_shipstuff.GetById(id) == null)
             {
                 return NotFound($"No ship was here......");
             }
 
-            _ship.Delete(id);
+            _shipstuff.Delete(id);
             return NoContent();
         }
 
