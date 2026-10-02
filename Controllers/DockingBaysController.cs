@@ -100,12 +100,12 @@ namespace Starbase.StationOps.Controllers
 
         [HttpPut("{id}/dock/{shipId}")]
 
-        public ActionResult<DockingBayReadDto> Dock(int id, int shipId)
+        public ActionResult<DockingBayReadDto> Dock(int BayId,int ShipId)
 
         {
-            bool dock = _dockingbays.IsBayAvailable(id);
+            bool dock = _dockingbays.IsBayAvailable(ShipId);
 
-            if (dock == false || shipId == null)
+            if (dock == null || BayId == null)
             {
                 return NotFound("This Ship Does Not Exist or this Docking Bay is not Available....");
             }
@@ -116,11 +116,11 @@ namespace Starbase.StationOps.Controllers
 
         [HttpPut("{id}/undock/{shipId}")]
   
-        public ActionResult<DockingBayReadDto> Undock(int id, int shipId)
+        public ActionResult<DockingBayReadDto> Undock(int BayId, int ShipId)
         {
-            bool undock = _dockingbays.IsBayAvailable(id);
+            bool undock = _dockingbays.IsBayAvailable(ShipId);
 
-            if (undock == true || shipId == null)
+            if (undock == null || BayId == null)
             {
                 return NotFound("This Ship Does Not Exist or this Docking Bay is not Available....");
             }
