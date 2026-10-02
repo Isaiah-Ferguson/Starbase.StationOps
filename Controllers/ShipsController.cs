@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Starbase.StationOps.Models;
+using Starbase.StationOps.Services;
 
 namespace Starbase.StationOps
 {
@@ -9,9 +10,13 @@ namespace Starbase.StationOps
     {
         private readonly IShipsService _shipstuff;
 
-        public ShipsController (IShipsService shipstuff)
+        private readonly IMaintenanceTicketService _shipticket;
+
+        public ShipsController (IShipsService shipstuff, IMaintenanceTicketService shipticket)
         {
             _shipstuff = shipstuff;
+
+            _shipticket = shipticket;
         }
 
         [HttpGet("GetAll")]
@@ -38,9 +43,9 @@ namespace Starbase.StationOps
 
         [HttpGet("Low-Fuel/{fuelLevel}")]
 
-        public ActionResult<ShipReadDTO?> GetByFuel(int fuelLevel)
+        public ActionResult<List<ShipReadDTO>> GetByFuel(int fuelLevel)
         {
-            ShipReadDTO? shipFuel = _shipstuff.GetByLowFuel(fuelLevel);
+            List<ShipReadDTO>? shipFuel = _shipstuff.GetByLowFuel(fuelLevel);
                 
             
             if (shipFuel == null)
@@ -48,7 +53,7 @@ namespace Starbase.StationOps
                 return NotFound("Ship fuel level outside of range");
             }
 
-            return Ok(fuelLevel);
+            return Ok(shipFuel);
         }
 
         [HttpPost("Create")]
@@ -105,9 +110,9 @@ namespace Starbase.StationOps
         
         public IActionResult Delete(int id)
         {
-            MaintenanceTicket shipTicket = 
+            
 
-             if (_shipstuff != null && shipTicket.IsResolved == true)
+             if (_shipticket.GetByShipId(id) != null)
             {
                 return NotFound($"No ship was here......");
             }
