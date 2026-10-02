@@ -28,10 +28,7 @@ namespace Starbase.StationOps.Services
 
         public bool IsBayAvailable(int id)
         {
-            DockingBay dockingBay = _repository.GetAll()
-                .Where(d => d.Id == id && d.IsAvalible == false)
-                .OrderBy(d => d.BayNumber)
-                .FirstOrDefault();
+            var dockingBay = _repository.GetAll().Where(d => d.ShipId == 0).OrderBy(d => d.BayNumber).ToList();
 
             return dockingBay != null;
         }
@@ -93,6 +90,12 @@ namespace Starbase.StationOps.Services
             {
                 _repository.Delete(dockingBay);
             }
+        }
+
+        public void DockShip(int shipId)
+        {
+            var dock = _db.DockingBay.FirstOrDefault(d => d.Shi)
+            if (dock )
         }
 
 
