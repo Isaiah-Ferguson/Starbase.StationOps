@@ -92,10 +92,31 @@ namespace Starbase.StationOps.Services
             }
         }
 
-        public void DockShip(int shipId)
+        public bool DockShip(int ShipId)
         {
-            var dock = _db.DockingBay.FirstOrDefault(d => d.Shi)
-            if (dock )
+            var dock = _repository.GetById(ShipId);
+
+            if (dock == null)
+            {
+                return false;
+            }
+
+            dock.dShip = true;
+            dock.uShip = false;
+            return true;
+        }
+
+        public bool UndockShip(int ShipId)
+        {
+            var undock = _repository.GetById(ShipId);
+            if (undock == null)
+            {
+                return false;
+            }
+
+            undock.uShip = true;
+            undock.dShip = false;
+            return true;
         }
 
 
