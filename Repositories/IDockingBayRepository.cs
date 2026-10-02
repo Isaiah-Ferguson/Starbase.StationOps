@@ -13,5 +13,8 @@ namespace Starbase.StationOps.Repositories
         DockingBay Add (DockingBay dockingBay);
         void Update (int id, DockingBay dockingBay);
         void Delete (DockingBay dockingBay);
+        bool IsBayAvailable(int id);
+        bool DockShip(int id);
+        bool UndockShip(int id);
     }
 }
