@@ -41,11 +41,15 @@ namespace Starbase.StationOps
         }
 
 
-        [HttpGet("Low-Fuel/{fuelLevel}")]
+        [HttpGet("Low-Fuel/{threshhold}")]
 
-        public ActionResult<List<ShipReadDTO>> GetByFuel(int fuelLevel)
+        public ActionResult<List<ShipReadDTO>> GetByFuel(int threshhold)
         {
-            List<ShipReadDTO>? shipFuel = _shipstuff.GetByLowFuel(fuelLevel);
+            if(threshhold > 100 && threshhold < 0)
+            {
+                return BadRequest("Threshold is outside range");
+            }
+            List<ShipReadDTO>? shipFuel = _shipstuff.GetByLowFuel(threshhold);
                 
             
             if (shipFuel == null)

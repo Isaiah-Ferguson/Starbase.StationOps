@@ -35,12 +35,12 @@ namespace Starbase.StationOps
             return ship;
         }
 
-        public Ship Refuel(Ship ship)
+        public Ship Refuel(Ship fuelpercent)
         {
             
             _db.SaveChanges();
 
-            return ship;
+            return fuelpercent;
         }
 
         public void Update(Ship ship)

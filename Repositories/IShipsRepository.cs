@@ -15,7 +15,7 @@ namespace Starbase.StationOps
 
        Ship Add(Ship ship);
 
-       Ship Refuel(Ship ship);
+       Ship Refuel(Ship refueled);
 
        void Update(Ship ship);
 

@@ -94,10 +94,10 @@ namespace Starbase.StationOps
              // if the ship has any maintenance ticket that isn't resolved.
             //DELETE /api/ships/{id} returns 400 while
 
-            MaintenanceTicket? shipTicket = _ticketRepository.GetAll().FirstOrDefault(s => s.ShipId == id);
+            List <MaintenanceTicket>? shipTickets = _ticketRepository.GetAll().Where(t => t.ShipId == id && t.IsResolved == false).ToList();
 
             //if the ship is not null & the ticket is are resolved then we can delete
-            if (ship != null && shipTicket.IsResolved == true)
+            if (ship != null && shipTickets.Count == 0)
             {
                 _shipsrepository.Delete(ship);
             }
@@ -106,17 +106,9 @@ namespace Starbase.StationOps
 
 
         //GetByLowFuel
-        public List<ShipReadDTO>? GetByLowFuel(int shipId)
+        public List<ShipReadDTO>? GetByLowFuel(int threshhold)
         {
-            Ship? shipFuel = _shipsrepository.GetById(shipId);
-
-            if (shipFuel is null)
-            {
-                return null;
-            }
-
-
-            return _shipsrepository.GetAll().OrderBy(s => s.FuelPercent).Select(s => ToReadDTO(s)).ToList();
+            return _shipsrepository.GetAll().Where(s => s.FuelPercent < threshhold).OrderBy(s => s.FuelPercent).Select(s => ToReadDTO(s)).ToList();
         }
 
         public bool Refuel(int id)
@@ -129,6 +121,8 @@ namespace Starbase.StationOps
             }
 
             ship.FuelPercent = 100;
+
+            _shipsrepository.Update(ship);
 
             return true;
         }
