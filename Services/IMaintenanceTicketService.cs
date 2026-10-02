@@ -11,4 +11,5 @@ public interface IMaintenanceTicketService
     MaintenanceTicketReadDto? Create(MaintenanceTicketCreateDto ticket);            
     bool Update(int id, MaintenanceTicketCreateDto changes);
     public void Delete(int id);
+    MaintenanceTicketReadDto? GetByShipId(int shipId); 
 }

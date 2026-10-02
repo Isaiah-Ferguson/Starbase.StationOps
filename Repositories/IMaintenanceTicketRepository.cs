@@ -9,5 +9,6 @@ namespace Starbase.StationOps.Repositories
         MaintenanceTicket Add(MaintenanceTicket ticket);
         void Update(MaintenanceTicket ticket);
         void Delete(MaintenanceTicket ticket);
+        MaintenanceTicket? GetByShipId(int shipId); 
     }
 }
