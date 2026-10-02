@@ -119,9 +119,6 @@ namespace Starbase.StationOps.Services
             return true;
         }
 
-
-
-
         //Helper Method
         private static DockingBayReadDto ToReadDto(DockingBay dockingBay)
         {
