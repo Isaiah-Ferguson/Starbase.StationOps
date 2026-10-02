@@ -24,9 +24,9 @@ public class MaintenanceTicketService : IMaintenanceTicketService
         .ToList();
     }
 
-    public List<MaintenanceTicketReadDto> GetAll(int shipId)
+    public List<MaintenanceTicketReadDto> GetListByShipId(int shipId)
     {
-        return _repository.GetAll(shipId)
+        return _repository.GetAll().Where(ticket => ticket.ShipId == shipId)
             .OrderBy(ticket => ticket.Id)
             .Select(ToReadDTO)
             .ToList();

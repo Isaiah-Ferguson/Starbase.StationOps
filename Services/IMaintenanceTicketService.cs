@@ -7,9 +7,9 @@ namespace Starbase.StationOps.Services;
 public interface IMaintenanceTicketService
 {
     List<MaintenanceTicketReadDto> GetAll();
-    List<MaintenanceTicketReadDto> GetAll(int shipId);
     MaintenanceTicketReadDto? GetById(int id);
 
+    List<MaintenanceTicketReadDto?> GetListByShipId(int id);
     MaintenanceTicketReadDto? Create(MaintenanceTicketCreateDto ticket);            
     bool Update(int id, MaintenanceTicketCreateDto changes);
     MaintenanceTicketReadDto? Resolve(int id, MaintenanceTicketCreateDto changes);

@@ -27,12 +27,6 @@ public class MaintenanceTicketRepository : IMaintenanceTicketRepository
         return _db.Maintain.FirstOrDefault(m => m.ShipId == shipId); 
     }
 
-   public List<MaintenanceTicket> GetAll(int shipId)
-{
-    return _db.Maintain
-        .Where(ticket => ticket.ShipId == shipId)
-        .ToList();
-}
 
     public MaintenanceTicket Add(MaintenanceTicket ticket)
     {

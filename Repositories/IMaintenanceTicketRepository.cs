@@ -5,7 +5,7 @@ namespace Starbase.StationOps.Repositories
     public interface IMaintenanceTicketRepository
     {
         List<MaintenanceTicket> GetAll();
-        List<MaintenanceTicket> GetAll(int shipId);
+    
         MaintenanceTicket? GetById(int id);
         MaintenanceTicket Add(MaintenanceTicket ticket);
         void Update(MaintenanceTicket ticket);

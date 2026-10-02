@@ -45,7 +45,7 @@ public class MaintenanceTicketController : ControllerBase
             return NotFound($"No ship with id {shipId}.");
         }
 
-        return Ok(_tickets.GetAll(shipId));
+        return Ok(_tickets.GetListByShipId(shipId));
     }
 
     [HttpPost]
