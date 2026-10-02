@@ -37,6 +37,15 @@ namespace Starbase.StationOps.Controllers
             return Ok(visitor);
         }
 
+        [HttpGet("by-planet/{homePlanet}")]
+        public ActionResult<List<VisitorReadDTO>> GetByPlanet(string homePlanet)
+        {
+            List<VisitorReadDTO> planets = _visitors.GetByPlanet(homePlanet);
+
+            return Ok(planets);
+        }
+
+
         [HttpPost]
 
         public ActionResult<VisitorReadDTO> Create([FromBody] VisitorCreateDTO newVisitor)
@@ -72,6 +81,24 @@ namespace Starbase.StationOps.Controllers
             return Ok(existing);
         }
 
+        [HttpPut("{id}/clear")]
+        public ActionResult<VisitorReadDTO> IsCleared(int id)
+        {
+            VisitorReadDTO? cleared = _visitors.GetById(id);            
+            if (cleared == null)
+            {
+                return NotFound($"No visitor found with ID {id}");
+            }
+            
+            bool isCleared = _visitors.IsCleared(id);
+            if(isCleared == false)
+            {
+                return BadRequest($"No crew member on that ship is currently on duty.");
+            }
+
+            return Ok($"Visitor with ID {id} is now cleared.");
+
+        }
 
         [HttpDelete("{id}")]
 
