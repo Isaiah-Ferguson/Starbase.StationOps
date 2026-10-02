@@ -13,6 +13,7 @@ namespace Starbase.StationOps.Repositories
       CrewMember? GetById(int id); 
       CrewMember Add(CrewMember newCrewMember);
       void Update(CrewMember newCrewMember);
-      void Delete(CrewMember deleteCrewMember);   
+      void Delete(CrewMember deleteCrewMember); 
+
     }
 }
