@@ -33,6 +33,17 @@ public class MaintenanceTicketService : IMaintenanceTicketService
 
             return ToReadDTO(ticket);
         }
+       public MaintenanceTicketReadDto? GetByShipId(int shipId)
+    {
+         MaintenanceTicket? ticket = _repository.GetByShipId(shipId);
+
+            if (ticket is null)
+            {
+                return null;
+            }
+
+            return ToReadDTO(ticket);
+    }
 
     public MaintenanceTicketReadDto? Create(MaintenanceTicketCreateDto ticket)
     {

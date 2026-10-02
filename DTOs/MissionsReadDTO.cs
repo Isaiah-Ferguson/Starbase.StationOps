@@ -11,5 +11,6 @@ namespace Starbase.StationOps.DTOs
         public string Title {get;set;}=string.Empty;
         public int ShipId {get;set;}
         public string Status {get;set;}=string.Empty;
+        
     }
 }
