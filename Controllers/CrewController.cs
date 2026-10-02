@@ -71,6 +71,89 @@ namespace Starbase.StationOps.Controllers
             return NoContent(); 
         }//end of delete
 
-        
+
+
+        [HttpPut("{id}/clock-in")]
+        public ActionResult<CrewMemberReadDto> ClockIn(int id)
+        {
+            CrewMemberReadDto? exists = _members.GetById(id);
+            if(exists is null)
+            {
+                return NotFound($"No Member with id {id} was found");
+            }
+
+            bool IsTrue = _members.ClockIn(id);
+            if(IsTrue)
+            {
+                return Ok($"ID {id} is now clocked in");
+            }
+            else
+            {
+                return BadRequest($"ID {id} is already clocked in");
+            }
+        } //end of edit
+
+        [HttpPut("{id}/clock-out")]
+        public ActionResult<CrewMemberReadDto> ClockOut(int id)
+        {
+            CrewMemberReadDto? exists = _members.GetById(id);
+            if(exists is null)
+            {
+                return NotFound($"No Member with id {id} was found");
+            }
+
+            bool IsTrue = _members.ClockOut(id);
+            if(IsTrue)
+            {
+                return Ok($"ID {id} is now clocked out");
+            }
+            else
+            {
+                return BadRequest($"ID {id} is already clocked out");
+            }
+        } //end of edit
+
+
+        [HttpGet("GetByRole/{role}")]
+        public ActionResult<List<CrewMemberReadDto>> GetByRole(string role)
+        {
+            List<CrewMemberReadDto> member = _members.GetByRole(role); 
+            if(member.Count == 0)
+            {
+                return BadRequest($"No ID with the role exists");
+            }
+            else
+            {
+                return Ok(_members.GetByRole(role)); 
+            }
+        }//end GetAll
+
+        [HttpPut("{id}/assign/{shipid}")]
+        public ActionResult<CrewMemberReadDto> AssignShipId(int id, int shipid)
+        {
+            CrewMemberReadDto? exists = _members.GetById(id);
+            if(exists is null)
+            {
+                return NotFound($"No crew member with id {id} was found");
+            }
+
+            bool ok = _members.AssignShipId(id, shipid);
+            
+            if(ok == true)
+            {
+                return Ok($"ID {id} has been assigned to {shipid}");
+            }
+            else
+            {
+                return BadRequest($"No ship with id {shipid} was found");
+            }
+            // assigns a crew member to a ship.
+
+
+            //404 if the CREW member doesn't exist
+
+
+            // 400 if the SHIP doesn't exist
+        }
     } //end of class
 }//end of namespace

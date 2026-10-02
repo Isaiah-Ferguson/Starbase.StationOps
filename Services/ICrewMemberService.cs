@@ -13,6 +13,13 @@ namespace Starbase.StationOps.Services
         CrewMemberReadDto? Create(CrewMemberCreateDto newCrewMember);
         bool Edit(int id, CrewMemberReadDto editMember);
         void Delete(int id); 
+
+        bool ClockIn(int id); 
+        bool ClockOut(int id); 
+
+        List<CrewMemberReadDto> GetByRole(string role);
+
+        bool AssignShipId(int id, int shipid);
         
     }
 }

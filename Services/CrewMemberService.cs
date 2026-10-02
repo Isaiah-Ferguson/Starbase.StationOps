@@ -13,10 +13,12 @@ namespace Starbase.StationOps.Services
 
 
         private readonly ICrewMemberRepository _repo; 
+        private readonly IShipsRepository _repoShip; 
 
-        public CrewMemberService(ICrewMemberRepository repo)
+        public CrewMemberService(ICrewMemberRepository repo, IShipsRepository repoShip)
         {
             _repo = repo; 
+            _repoShip = repoShip;
         }//end of constructor
 
         public List<CrewMemberReadDto> GetAll()
@@ -50,7 +52,7 @@ namespace Starbase.StationOps.Services
             member.IsOnDuty = newCrewMember.IsOnDuty; 
             member.ShipId = 0; 
             CrewMember created = _repo.Add(member); 
-            return ToReadDto(member); 
+            return ToReadDto(created); 
 
 
         }//end of Create
@@ -106,5 +108,78 @@ namespace Starbase.StationOps.Services
 
             return true; 
         }
+
+
+        public bool ClockIn(int id)
+        {
+            CrewMember? existing = _repo.GetById(id);
+            if (existing.IsOnDuty == false)
+            {
+                existing.IsOnDuty = true;
+                _repo.Update(existing);
+                return true;
+            }
+            else
+            {
+            //If IsOnDuty is false, set to true. If false, give error message
+                return false;
+            }
+            
+        } //end of Edit
+
+        public bool ClockOut(int id)
+        {
+            CrewMember? existing = _repo.GetById(id);
+            if (existing.IsOnDuty == true)
+            {
+                existing.IsOnDuty = false;
+                _repo.Update(existing);
+                return true;
+            }
+            else
+            {
+            //If IsOnDuty is false, set to true. If false, give error message
+                return false;
+            }
+            
+        } //end of Edit
+
+        public List<CrewMemberReadDto> GetByRole(string role)
+        {
+            // IEnumerable<CrewMemberReadDto> result = _repo;
+
+            // result = result.Where(c => c.Role == role);
+
+            // return result.ToList();
+
+
+            return _repo.GetAll()
+            .OrderBy(c => c.Role)
+            .Select(c => ToReadDto(c))
+            .Where(c => c.Role == role)
+            .ToList(); 
+        }
+
+        public bool AssignShipId(int id, int shipid)
+        {
+            CrewMember? existing = _repo.GetById(id);
+
+            if(existing == null)
+            {
+                return false;
+            }
+
+            //we have to check if ship exists
+            bool shipExists = _repoShip.GetAll().Any(s => s.Id == shipid);
+            if(shipExists == false)
+            {
+                return false;
+            }
+
+            existing.ShipId = shipid;
+            _repo.Update(existing);
+            return true;
+        }
+                    // existing.ShipId = shipid.ShipId;  
     } //end of class
 }//end of namespace
