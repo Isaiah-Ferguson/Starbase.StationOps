@@ -41,11 +41,5 @@ namespace Starbase.StationOps.Repositories
             _db.SaveChanges(); 
         }//end of delete
 
-        public List<CrewMember> GetByRole(string role)
-        {
-            
-            return _db.CrewMembers.Where(c => c.Role == role).ToList(); 
-        }//end of getall
-
     }//end of class
 }//end of namespace

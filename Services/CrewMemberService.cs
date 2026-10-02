@@ -153,9 +153,10 @@ namespace Starbase.StationOps.Services
             // return result.ToList();
 
 
-            return _repo.GetByRole(role)
+            return _repo.GetAll()
             .OrderBy(c => c.Role)
             .Select(c => ToReadDto(c))
+            .Where(c => c.Role == role)
             .ToList(); 
         }
 

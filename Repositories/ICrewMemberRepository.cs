@@ -15,6 +15,5 @@ namespace Starbase.StationOps.Repositories
       void Update(CrewMember newCrewMember);
       void Delete(CrewMember deleteCrewMember); 
 
-    List<CrewMember> GetByRole(string role);
     }
 }
