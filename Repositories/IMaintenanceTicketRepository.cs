@@ -10,5 +10,6 @@ namespace Starbase.StationOps.Repositories
         List<MaintenanceTicket> GetByShipId(int shipId);
         void Update(MaintenanceTicket ticket);
         void Delete(MaintenanceTicket ticket);
+        MaintenanceTicket? GetByShipId(int shipId); 
     }
 }

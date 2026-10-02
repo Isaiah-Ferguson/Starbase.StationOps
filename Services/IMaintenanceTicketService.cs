@@ -14,4 +14,5 @@ public interface IMaintenanceTicketService
     MaintenanceTicketReadDto? Resolve(int id, MaintenanceTicketCreateDto changes);
     MaintenanceTicketReadDto? Reopen(int id, MaintenanceTicketCreateDto changes);
     public void Delete(int id);
+    MaintenanceTicketReadDto? GetByShipId(int shipId); 
 }

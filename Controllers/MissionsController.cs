@@ -1,6 +1,8 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Starbase.StationOps.Dtos;
 using Starbase.StationOps.DTOs;
+using Starbase.StationOps.Models;
 using Starbase.StationOps.Services;
 
 namespace Starbase.StationOps.Controllers
@@ -10,10 +12,12 @@ namespace Starbase.StationOps.Controllers
     public class MissionsController : ControllerBase
     {
         private readonly IMissionsService _mission;
+        private readonly IMaintenanceTicketService _maintenance; 
 
-        public MissionsController(IMissionsService mission)
+        public MissionsController(IMissionsService mission, IMaintenanceTicketService maintenance)
         {
             _mission = mission;
+            _maintenance = maintenance; 
         }
 
     [HttpGet("GetAll")]
@@ -81,5 +85,44 @@ namespace Starbase.StationOps.Controllers
         _mission.Delete(mission.Id);
         return NoContent();
     }
+
+    [HttpPut("{id}/advance")]
+    public ActionResult Advance(int id)
+        {
+            MissionsReadDTO? mission = _mission.GetById(id);
+            if (mission is null)
+            {
+                return NotFound($"No mission with id {id}.");
+            }
+
+            if (string.Equals(mission.Status, "Complete", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Completed missions cannot be advanced");
+            }
+            MaintenanceTicketReadDto? resolved = _maintenance.GetByShipId(mission.ShipId);  
+            if(resolved != null)
+            {
+               if(resolved.IsResolved == false)
+            {
+                return BadRequest("Must Resolve Maintance Ticket before advancing the mission");
+            }
+            }
+            
+           
+            _mission.Advance(id);
+          
+            return Ok(_mission.GetById(id).Status); 
+        }
+        [HttpGet("by-ship/{shipId}")]
+        public ActionResult<List<MissionsReadDTO>>? GetMission(int shipId)
+        {
+             List<MissionsReadDTO>? ship = _mission.GetMissions(shipId);
+            if (ship == null)
+            {
+                return NotFound($"No ship with id {shipId}.");
+            }
+          
+            return Ok(ship);  
+        }
     }
 }

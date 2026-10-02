@@ -22,6 +22,10 @@ public class MaintenanceTicketRepository : IMaintenanceTicketRepository
     {
         return _db.Maintain.FirstOrDefault(m => m.Id == id);
     }
+    public MaintenanceTicket? GetByShipId(int shipId)
+    {
+        return _db.Maintain.FirstOrDefault(m => m.ShipId == shipId); 
+    }
 
    public List<MaintenanceTicket> GetByShipId(int shipId)
 {

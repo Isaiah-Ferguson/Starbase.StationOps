@@ -11,7 +11,7 @@ namespace Starbase.StationOps.Services
     {
         List<DockingBayReadDto> GetAll();
         DockingBayReadDto? GetById(int id);
-        DockingBayReadDto Add(DockingBayCreateDto dockingBay);
+        DockingBayReadDto? Add(DockingBayCreateDto dockingBay);
         bool Update(int id, DockingBay dockingBay);
         void Delete (int id); 
     }
