@@ -9,7 +9,11 @@ namespace Starbase.StationOps
     {
       List<ShipReadDTO> GetAll();  
       ShipReadDTO? GetById(int id);
+
+      ShipReadDTO? GetByLowFuel(int fuelLevel);
       ShipReadDTO Create(ShipCreateDTO ship);
+
+      bool Refuel(int id);
       bool Update(int id, Ship changes);
       void Delete(int id);
     }

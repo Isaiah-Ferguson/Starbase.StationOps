@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Starbase.StationOps.Models;
+using Starbase.StationOps.Repositories;
 
 namespace Starbase.StationOps
 {
@@ -9,9 +11,15 @@ namespace Starbase.StationOps
     {
         private readonly IShipsRepository _shipsrepository;
 
-        public ShipsService (IShipsRepository shipsrepository)
+        private readonly IMaintenanceTicketRepository _ticketRepository;
+
+        
+
+        public ShipsService(IShipsRepository shipsrepository, IMaintenanceTicketRepository ticketRepository)
         {
             _shipsrepository = shipsrepository;
+
+            _ticketRepository = ticketRepository;
         }
 
         //Get All
@@ -74,15 +82,58 @@ namespace Starbase.StationOps
         }
 
         //Delete
+        
+            //Block deleting a ship with open tickets (Using a teammate's repository)
+            
+           
+            //The service asks for IMaintenanceTicketRepository from Zionn (#5 Maintenance Tickets).
         public void Delete(int id)
         {
             Ship? ship = _shipsrepository.GetById(id);
 
-            if(ship != null)
+             // if the ship has any maintenance ticket that isn't resolved.
+            //DELETE /api/ships/{id} returns 400 while
+
+            MaintenanceTicket? shipTicket = _ticketRepository.GetAll().FirstOrDefault(s => s.ShipId == id);
+
+            //if the ship is not null & the ticket is are resolved then we can delete
+            if (ship != null && shipTicket.IsResolved == true)
             {
                 _shipsrepository.Delete(ship);
             }
+
         }
+
+
+        //GetByLowFuel
+        public List<ShipReadDTO>? GetByLowFuel(int shipId)
+        {
+            Ship? shipFuel = _shipsrepository.GetById(shipId);
+
+            if (shipFuel is null)
+            {
+                return null;
+            }
+
+
+            return _shipsrepository.GetAll().OrderBy(s => s.FuelPercent).Select(s => ToReadDTO(s)).ToList();
+        }
+
+        public bool Refuel(int id)
+        {
+            Ship? ship = _shipsrepository.GetById(id);
+
+            if (ship == null)
+            {
+                return false;
+            }
+
+            ship.FuelPercent = 100;
+
+            return true;
+        }
+
+
 
         //Reader
         public static ShipReadDTO ToReadDTO(Ship newShip)

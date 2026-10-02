@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Starbase.StationOps.Data;
 
 namespace Starbase.StationOps
@@ -25,10 +21,25 @@ namespace Starbase.StationOps
             return _db.Ships.FirstOrDefault(s => s.Id == id);
         }
 
+        public Ship? GetByLowFuel(int fuelLevel)
+        {
+            return _db.Ships.FirstOrDefault(s => s.FuelPercent == fuelLevel);
+        }
+
+
+
         public Ship Add(Ship ship)
         {
             _db.Ships.Add(ship);
             _db.SaveChanges();
+            return ship;
+        }
+
+        public Ship Refuel(Ship ship)
+        {
+            
+            _db.SaveChanges();
+
             return ship;
         }
 
@@ -43,5 +54,5 @@ namespace Starbase.StationOps
             _db.SaveChanges();
         }
     }
-    
+
 }

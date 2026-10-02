@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Starbase.StationOps.Models;
 
 namespace Starbase.StationOps
 {
@@ -36,6 +33,22 @@ namespace Starbase.StationOps
             }
 
             return Ok(shipId);
+        }
+
+
+        [HttpGet("Low-Fuel/{fuelLevel}")]
+
+        public ActionResult<ShipReadDTO?> GetByFuel(int fuelLevel)
+        {
+            ShipReadDTO? shipFuel = _shipstuff.GetByLowFuel(fuelLevel);
+                
+            
+            if (shipFuel == null)
+            {
+                return NotFound("Ship fuel level outside of range");
+            }
+
+            return Ok(fuelLevel);
         }
 
         [HttpPost("Create")]
@@ -72,12 +85,29 @@ namespace Starbase.StationOps
             return NoContent(); 
         }
 
+
+
+        [HttpPut("{id}/Refuel")]
+
+        public IActionResult Refuel(int id)
+        {
+            bool refueled = _shipstuff.Refuel(id);
+
+            if (!refueled)
+        {
+            return NotFound($"No ship with id {id}.");
+        }
+
+        return NoContent();
+        }
+
         [HttpDelete("Delete/{id}")]
         
         public IActionResult Delete(int id)
         {
+            MaintenanceTicket shipTicket = 
 
-            if (_shipstuff.GetById(id) == null)
+             if (_shipstuff != null && shipTicket.IsResolved == true)
             {
                 return NotFound($"No ship was here......");
             }
