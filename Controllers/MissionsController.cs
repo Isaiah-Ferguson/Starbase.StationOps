@@ -99,7 +99,7 @@ namespace Starbase.StationOps.Controllers
             {
                 return BadRequest("Completed missions cannot be advanced");
             }
-            MaintenanceTicketReadDto? resolved = _maintenance.GetAll().FirstOrDefault(s => s.ShipId == mission.ShipId); 
+            MaintenanceTicketReadDto? resolved = _maintenance.GetByShipId(mission.ShipId);  
             if(resolved != null)
             {
                if(resolved.IsResolved == false)
