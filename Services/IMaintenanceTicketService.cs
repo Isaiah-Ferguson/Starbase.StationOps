@@ -8,7 +8,7 @@ public interface IMaintenanceTicketService
 {
     List<MaintenanceTicketReadDto> GetAll();
     MaintenanceTicketReadDto? GetById(int id);
-    List<MaintenanceTicketReadDto> GetByShipId(int shipId);
+    List<MaintenanceTicketReadDto> GetListByShipId(int shipId);
     MaintenanceTicketReadDto? Create(MaintenanceTicketCreateDto ticket);            
     bool Update(int id, MaintenanceTicketCreateDto changes);
     MaintenanceTicketReadDto? Resolve(int id, MaintenanceTicketCreateDto changes);

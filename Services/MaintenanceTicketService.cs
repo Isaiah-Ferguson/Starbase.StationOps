@@ -32,6 +32,8 @@ public class MaintenanceTicketService : IMaintenanceTicketService
         {
             return null;
         }
+        return ToReadDTO(ticket);
+        }
        public MaintenanceTicketReadDto? GetByShipId(int shipId)
     {
          MaintenanceTicket? ticket = _repository.GetByShipId(shipId);
@@ -44,12 +46,11 @@ public class MaintenanceTicketService : IMaintenanceTicketService
             return ToReadDTO(ticket);
     }
 
-        return ToReadDTO(ticket);
-    }
+    
 
-    public List<MaintenanceTicketReadDto> GetByShipId(int shipId)
+    public List<MaintenanceTicketReadDto> GetListByShipId(int shipId)
     {
-        return _repository.GetByShipId(shipId)
+        return _repository.GetListByShipId(shipId)
             .OrderBy(ticket => ticket.IsResolved)
             .ThenBy(ticket => ticket.Id)
             .Select(ToReadDTO)

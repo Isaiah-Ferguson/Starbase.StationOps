@@ -7,7 +7,7 @@ namespace Starbase.StationOps.Repositories
         List<MaintenanceTicket> GetAll();
         MaintenanceTicket? GetById(int id);
         MaintenanceTicket Add(MaintenanceTicket ticket);
-        List<MaintenanceTicket> GetByShipId(int shipId);
+        List<MaintenanceTicket> GetListByShipId(int shipId);
         void Update(MaintenanceTicket ticket);
         void Delete(MaintenanceTicket ticket);
         MaintenanceTicket? GetByShipId(int shipId); 
