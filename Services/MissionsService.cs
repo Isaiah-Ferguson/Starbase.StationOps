@@ -1,14 +1,17 @@
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Starbase.StationOps.DTOs;
 using Starbase.StationOps.Models;
 using Starbase.StationOps.Repositories;
 namespace Starbase.StationOps.Services
 {
-    public class MissionsService : IMissionsService
+    public class MissionsService : IMissionsService 
     {
         private readonly IMissionsRepository _mission;
-        public MissionsService(IMissionsRepository mission)
+        private readonly IMaintenanceTicketRepository _maintenance; 
+        public MissionsService(IMissionsRepository mission, IMaintenanceTicketRepository maintencance)
         {
             _mission = mission;
+            _maintenance = maintencance; 
         }
 
         public List<MissionsReadDTO> GetAll()
@@ -77,6 +80,52 @@ namespace Starbase.StationOps.Services
             {
                 _mission.Delete(supply);
             }
+        }
+        public MissionsReadDTO Advance(int id)
+        {
+            
+            Missions? mission = _mission.GetById(id); 
+            
+            if(mission is null)
+            {
+                return null;
+            }
+        //      MaintenanceTicket? resolved = _maintenance.GetAll().FirstOrDefault(m => m.ShipId == mission.ShipId);
+        //    if(resolved is null)
+        //     {
+        //         return null; 
+        //     }
+        //     if(resolved.IsResolved == false)
+        //     {
+        //         return null; 
+        //     }
+            if(mission.Status == "Planned")
+            {
+                mission.Status = "Active"; 
+            }
+             else if(mission.Status == "Active")
+            {
+                mission.Status = "Complete"; 
+            }
+            
+            _mission.Update(mission); 
+            return ToReadDTO(mission); 
+        }
+
+        public List<MissionsReadDTO>? GetMissions(int shipId)
+        {
+              List<Missions>? mission = _mission.GetAll().Where(s => s.ShipId == shipId).ToList(); 
+            
+            if(mission is null)
+            {
+                return null;
+            }
+            return _mission.GetAll().Where(ss => ss.ShipId == shipId).Select(ToReadDTO).ToList(); 
+
+            //   return _mission.GetAll()
+            //     .OrderBy(s => s.Title)
+            //     .Select(ToReadDTO) // Turn every model into a DTO.
+            //     .ToList();
         }
         private static MissionsReadDTO ToReadDTO(Missions missions)
         {
