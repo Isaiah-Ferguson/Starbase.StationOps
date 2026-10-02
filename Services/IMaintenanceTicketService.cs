@@ -8,8 +8,12 @@ public interface IMaintenanceTicketService
 {
     List<MaintenanceTicketReadDto> GetAll();
     MaintenanceTicketReadDto? GetById(int id);
+
+    List<MaintenanceTicketReadDto?> GetListByShipId(int id);
     MaintenanceTicketReadDto? Create(MaintenanceTicketCreateDto ticket);            
     bool Update(int id, MaintenanceTicketCreateDto changes);
+    MaintenanceTicketReadDto? Resolve(int id, MaintenanceTicketCreateDto changes);
+    MaintenanceTicketReadDto? Reopen(int id, MaintenanceTicketCreateDto changes);
     public void Delete(int id);
     MaintenanceTicketReadDto? GetByShipId(int shipId); 
 }

@@ -27,6 +27,7 @@ public class MaintenanceTicketRepository : IMaintenanceTicketRepository
         return _db.Maintain.FirstOrDefault(m => m.ShipId == shipId); 
     }
 
+
     public MaintenanceTicket Add(MaintenanceTicket ticket)
     {
         _db.Maintain.Add(ticket);
@@ -38,6 +39,7 @@ public class MaintenanceTicketRepository : IMaintenanceTicketRepository
     {
         _db.SaveChanges();
     }
+
 
     public void Delete(MaintenanceTicket ticket)
     {
