@@ -23,6 +23,13 @@ public class MaintenanceTicketRepository : IMaintenanceTicketRepository
         return _db.Maintain.FirstOrDefault(m => m.Id == id);
     }
 
+   public List<MaintenanceTicket> GetByShipId(int shipId)
+{
+    return _db.Maintain
+        .Where(ticket => ticket.ShipId == shipId)
+        .ToList();
+}
+
     public MaintenanceTicket Add(MaintenanceTicket ticket)
     {
         _db.Maintain.Add(ticket);
@@ -34,6 +41,7 @@ public class MaintenanceTicketRepository : IMaintenanceTicketRepository
     {
         _db.SaveChanges();
     }
+
 
     public void Delete(MaintenanceTicket ticket)
     {

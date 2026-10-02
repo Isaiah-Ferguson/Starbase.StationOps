@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Starbase.StationOps.DTO;
 using Starbase.StationOps.Dtos;
 using Starbase.StationOps.Models;
@@ -8,12 +9,13 @@ namespace Starbase.StationOps.Services;
 public class MaintenanceTicketService : IMaintenanceTicketService
 {
     private readonly IMaintenanceTicketRepository _repository;
+    private readonly IShipsRepository _ships;
 
-    public MaintenanceTicketService(IMaintenanceTicketRepository repository)
+    public MaintenanceTicketService(IMaintenanceTicketRepository repository, IShipsRepository ships)
     {
         _repository = repository;
+        _ships = ships;//added repository and constructor to pull from to verify ship information
     }
-
     public List<MaintenanceTicketReadDto> GetAll()
     {
         return _repository.GetAll()
@@ -24,15 +26,24 @@ public class MaintenanceTicketService : IMaintenanceTicketService
 
     public MaintenanceTicketReadDto? GetById(int id)
     {
-            MaintenanceTicket? ticket = _repository.GetById(id);
+        MaintenanceTicket? ticket = _repository.GetById(id);
 
-            if (ticket is null)
-            {
-                return null;
-            }
-
-            return ToReadDTO(ticket);
+        if (ticket is null)
+        {
+            return null;
         }
+
+        return ToReadDTO(ticket);
+    }
+
+    public List<MaintenanceTicketReadDto> GetByShipId(int shipId)
+    {
+        return _repository.GetByShipId(shipId)
+            .OrderBy(ticket => ticket.IsResolved)
+            .ThenBy(ticket => ticket.Id)
+            .Select(ToReadDTO)
+            .ToList();
+    }
 
     public MaintenanceTicketReadDto? Create(MaintenanceTicketCreateDto ticket)
     {
@@ -41,85 +52,112 @@ public class MaintenanceTicketService : IMaintenanceTicketService
             return null;
         }
 
-            MaintenanceTicket Maintain = new MaintenanceTicket();
+        MaintenanceTicket Maintain = new MaintenanceTicket();
 
-            Maintain.ShipId = ticket.ShipId;
-            Maintain.Description = ticket.Description;
-            Maintain.IsResolved = false; //everything new starts here
+        Maintain.ShipId = ticket.ShipId;
+        Maintain.Description = ticket.Description;
+        Maintain.IsResolved = false; //everything new starts here
 
-            //We are creating a new Supply variable and storing our added supply.
-            MaintenanceTicket created = _repository.Add(Maintain);
+        //We are creating a new Supply variable and storing our added supply.
+        MaintenanceTicket created = _repository.Add(Maintain);
 
-            return ToReadDTO(created);
+        return ToReadDTO(created);
     }
 
     public bool Update(int id, MaintenanceTicketCreateDto changes)
     {
         MaintenanceTicket? existing = _repository.GetById(id);
-        
-        if (!IsValidCreateDto(changes))
+
+        if (existing is null || !IsValidCreateDto(changes))
         {
             return false;
         }
 
         existing.ShipId = changes.ShipId;
+        existing.Description = changes.Description;
+
 
         _repository.Update(existing);
         return true;
     }
 
+    public MaintenanceTicketReadDto? Resolve(int id, MaintenanceTicketCreateDto changes)
+    {
+        MaintenanceTicket? existing = _repository.GetById(id);
+
+        if (existing is null || existing.IsResolved)
+        {
+            return null;
+        }
+
+        existing.IsResolved = true;
+        existing.ShipId = changes.ShipId;
+        existing.Description = changes.Description;
+        _repository.Update(existing);
+
+        return ToReadDTO(existing);
+    }
+
+    public MaintenanceTicketReadDto? Reopen(int id, MaintenanceTicketCreateDto changes)
+    {
+        MaintenanceTicket? existing = _repository.GetById(id);
+
+        if (existing is null || !existing.IsResolved)
+        {
+            return null;
+        }
+
+        existing.IsResolved = false;
+        existing.ShipId = changes.ShipId;
+        existing.Description = changes.Description;
+        _repository.Update(existing);
+
+        return ToReadDTO(existing);
+    }
+
     public void Delete(int id)
     {
         MaintenanceTicket? existing = _repository.GetById(id);
-        
-            if (existing != null)
-            {              
+
+        if (existing != null)
+        {
             _repository.Delete(existing);
-            }
+        }
     }
 
     private bool IsValidCreateDto(MaintenanceTicketCreateDto ticket)
     {
-        // if (string.IsNullOrWhiteSpace(sector.Name))
-        // {
-        //     return false;
-        // }
-
-        // if (sector.SecurityLevel < 1 || sector.SecurityLevel > 5)
-        // {
-        //     return false;
-        // }
 
         if (string.IsNullOrWhiteSpace(ticket.Description) || ticket.ShipId <= 0)
         {
             return false;
         }
 
-        return true;
+        return _ships.GetById(ticket.ShipId) is not null;
     }
 
 
 
-        private static MaintenanceTicketReadDto ToReadDTO(MaintenanceTicket ticket)
-        {
-            MaintenanceTicketReadDto outputDTO = new MaintenanceTicketReadDto();
-            // Random rnd = new Random();
-            outputDTO.Id = ticket.Id;
-            outputDTO.ShipId = ticket.ShipId;
-            outputDTO.Description = ticket.Description;
-            outputDTO.IsResolved = ticket.IsResolved;
+    private static MaintenanceTicketReadDto ToReadDTO(MaintenanceTicket ticket)
+    {
+        MaintenanceTicketReadDto outputDTO = new MaintenanceTicketReadDto();
+        // Random rnd = new Random();
+        outputDTO.Id = ticket.Id;
+        outputDTO.ShipId = ticket.ShipId;
+        outputDTO.Description = ticket.Description;
+        outputDTO.IsResolved = ticket.IsResolved;
 
-            return outputDTO;
-        }
+        return outputDTO;
+    }
 
-        private static MaintenanceTicketCreateDto ToCreateDTO(MaintenanceTicket ticket)
-        {
-            MaintenanceTicketCreateDto outputDTO = new MaintenanceTicketCreateDto();
-            // Random rnd = new Random();
+    private static MaintenanceTicketCreateDto ToCreateDTO(MaintenanceTicket ticket)
+    {
+        MaintenanceTicketCreateDto outputDTO = new MaintenanceTicketCreateDto();
+        // Random rnd = new Random();
 
-            outputDTO.ShipId = ticket.ShipId;
-            outputDTO.Description = ticket.Description;
+        outputDTO.ShipId = ticket.ShipId;
+        outputDTO.Description = ticket.Description;
 
-            return outputDTO;
-        }
+        return outputDTO;
+    }
 }
