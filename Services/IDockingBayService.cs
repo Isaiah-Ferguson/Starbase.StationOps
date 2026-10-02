@@ -14,5 +14,7 @@ namespace Starbase.StationOps.Services
         DockingBayReadDto Add(DockingBayCreateDto dockingBay);
         bool Update(int id, DockingBay dockingBay);
         void Delete (int id); 
+
+        bool IsBayAvailable(int id);
     }
 }

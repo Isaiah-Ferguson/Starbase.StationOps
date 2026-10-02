@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Starbase.StationOps.Dtos;
-using Starbase.StationOps.Migrations;
 using Starbase.StationOps.Models;
 using Starbase.StationOps.Repositories;
 
@@ -24,6 +23,17 @@ namespace Starbase.StationOps.Services
             return _repository.GetAll()
             .Select(d => ToReadDto(d)) //turns every model into DTO
             .ToList();
+        }
+
+
+        public bool IsBayAvailable(int id)
+        {
+            DockingBay dockingBay = _repository.GetAll()
+                .Where(d => d.Id == id && d.IsAvalible == false)
+                .OrderBy(d => d.BayNumber)
+                .FirstOrDefault();
+
+            return dockingBay != null;
         }
 
         public DockingBayReadDto? GetById(int id)

@@ -10,5 +10,6 @@ namespace Starbase.StationOps.Models
         public int Id {get; set;}
         public int BayNumber {get; set;}
         public int ShipId {get; set;}
+        public bool IsAvalible {get; set;}
     }
 }

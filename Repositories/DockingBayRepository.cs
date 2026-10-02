@@ -21,6 +21,12 @@ namespace Starbase.StationOps.Repositories
             return _db.DockingBay.ToList();
         }
 
+
+        public bool IsBayAvailable(int id)
+        {
+            return _db.DockingBay.Where(d => d.IsAvalible == false).ToList().Any();
+        }
+
         public DockingBay? GetById(int id)
         {
             return _db.DockingBay.FirstOrDefault(d => d.Id == id);

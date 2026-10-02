@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Starbase.StationOps.Dtos;
-using Starbase.StationOps.Migrations;
 using Starbase.StationOps.Models;
 using Starbase.StationOps.Services;
 
@@ -26,6 +25,14 @@ namespace Starbase.StationOps.Controllers
         {
             return Ok(_dockingbays.GetAll());
         }
+
+        [HttpGet("Available")]
+        public ActionResult<List<DockingBayReadDto>> IsBayAvailable()
+        {
+            List<DockingBayReadDto> openbays = _dockingbays.GetAll();
+            return Ok(openbays);
+        }
+
 
         [HttpGet("{id}")]
         public ActionResult<DockingBayReadDto> GetById(int id)
@@ -89,6 +96,57 @@ namespace Starbase.StationOps.Controllers
             _dockingbays.Delete(id);
             return NoContent();
         }
+
+
+        [HttpPut("{id}/dock/{shipId}")]
+
+        public ActionResult<DockingBayReadDto> Dock(int id, int shipId)
+
+        {
+            bool isAvailable = _dockingbays.IsBayAvailable(id);
+
+            if (isAvailable == false || shipId == null)
+            {
+                return NotFound("This Ship Does Not Exist or this Docking Bay is not Available....");
+            }
+
+            isAvailable = true;
+            return Ok();
+
+        }
+
+        [HttpPut("{id}/undock/{shipId}")]
+  
+        public ActionResult<DockingBayReadDto> Undock(int id, int shipId)
+        {
+            bool isAvailable = _dockingbays.IsBayAvailable(id);
+
+            if (isAvailable == true || shipId == null)
+            {
+                return NotFound("This Ship Does Not Exist or this Docking Bay is not Available....");
+            }
+
+            isAvailable = false;
+            return Ok();
+        }
+
+        [HttpGet("by-ship/{shipId}")]
+
+        public ActionResult<DockingBayReadDto> Return(int shipId)
+        {
+            DockingBayReadDto? returnBay = _dockingbays.GetAll().FirstOrDefault(b => b.ShipId == shipId);
+            if (returnBay == null)
+            {
+                return NotFound("No Docking Bay Found for this Ship....");
+            }
+
+            return Ok(returnBay); 
+
+            
+        }
+        
+
+
 
     }
 }
