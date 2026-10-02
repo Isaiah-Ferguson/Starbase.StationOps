@@ -1,3 +1,4 @@
+using SQLitePCL;
 using Starbase.StationOps.DTOs;
 using Starbase.StationOps.Models;
 using Starbase.StationOps.Repositories;
@@ -8,9 +9,11 @@ namespace Starbase.StationOps.Services
     {
 
         private readonly IVisitorRepository _repository;
-        public VisitorServices(IVisitorRepository repository)
+        private readonly ICrewMemberRepository _crewRepository;
+        public VisitorServices(IVisitorRepository repository, ICrewMemberRepository crewMemberRepository)
         {
             _repository = repository;
+            _crewRepository = crewMemberRepository;
         }
 
         public List<VisitorReadDTO> GetAll()
@@ -29,6 +32,15 @@ namespace Starbase.StationOps.Services
 
             return ToReadDTO(visitor);
         }
+
+        public List<VisitorReadDTO> GetByPlanet(string homePlanet)
+        {
+            //this checks whether a visitor is from a homeplanet that matches the homePlanet parameter
+            IEnumerable<Visitors> byPlanet = _repository.GetAll().Where(v => v.HomePlanet.ToLower() == homePlanet);
+
+            return byPlanet.Select(v => ToReadDTO(v)).ToList();
+        }
+
 
         public VisitorReadDTO? Create(VisitorCreateDTO dto)
         {
@@ -77,18 +89,36 @@ namespace Starbase.StationOps.Services
 
             return true;
         }
+        public bool IsCleared(int id)
+        {
+            Visitors? cleared = _repository.GetById(id);
+            bool shipIdCheck = _crewRepository.GetAll().Any(c => c.ShipId == cleared.ShipId && c.IsOnDuty);
+
+            //checks whether there is a crew member with the same shipID as visitor AND on duty
+            if (shipIdCheck == false)
+            {
+                return false;
+            }
+            else
+            {
+                cleared.IsCleared = true;
+                _repository.Update(cleared);
+                return true;
+            }
+
+        }
 
         public void Delete(int id)
         {
             Visitors? exsisting = _repository.GetById(id);
 
-         if (exsisting != null)
+            if (exsisting != null)
             {
-                 _repository.Delete(exsisting);
+                _repository.Delete(exsisting);
             }
 
 
-           
+
         }
 
 
