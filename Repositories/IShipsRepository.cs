@@ -11,7 +11,11 @@ namespace Starbase.StationOps
 
        Ship? GetById(int id);
 
+       Ship? GetByLowFuel(int fuelLevel);
+
        Ship Add(Ship ship);
+
+       Ship Refuel(Ship refueled);
 
        void Update(Ship ship);
 

@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Starbase.StationOps.Models;
+using Starbase.StationOps.Services;
 
 namespace Starbase.StationOps
 {
@@ -12,9 +10,13 @@ namespace Starbase.StationOps
     {
         private readonly IShipsService _shipstuff;
 
-        public ShipsController (IShipsService shipstuff)
+        private readonly IMaintenanceTicketService _shipticket;
+
+        public ShipsController (IShipsService shipstuff, IMaintenanceTicketService shipticket)
         {
             _shipstuff = shipstuff;
+
+            _shipticket = shipticket;
         }
 
         [HttpGet("GetAll")]
@@ -36,6 +38,26 @@ namespace Starbase.StationOps
             }
 
             return Ok(shipId);
+        }
+
+
+        [HttpGet("Low-Fuel/{threshhold}")]
+
+        public ActionResult<List<ShipReadDTO>> GetByFuel(int threshhold)
+        {
+            if(threshhold > 100 && threshhold < 0)
+            {
+                return BadRequest("Threshold is outside range");
+            }
+            List<ShipReadDTO>? shipFuel = _shipstuff.GetByLowFuel(threshhold);
+                
+            
+            if (shipFuel == null)
+            {
+                return NotFound("Ship fuel level outside of range");
+            }
+
+            return Ok(shipFuel);
         }
 
         [HttpPost("Create")]
@@ -72,12 +94,29 @@ namespace Starbase.StationOps
             return NoContent(); 
         }
 
+
+
+        [HttpPut("{id}/Refuel")]
+
+        public IActionResult Refuel(int id)
+        {
+            bool refueled = _shipstuff.Refuel(id);
+
+            if (!refueled)
+        {
+            return NotFound($"No ship with id {id}.");
+        }
+
+        return NoContent();
+        }
+
         [HttpDelete("Delete/{id}")]
         
         public IActionResult Delete(int id)
         {
+            
 
-            if (_shipstuff.GetById(id) == null)
+             if (_shipticket.GetByShipId(id) != null)
             {
                 return NotFound($"No ship was here......");
             }
