@@ -21,6 +21,12 @@ namespace Starbase.StationOps.Repositories
             return _db.DockingBay.ToList();
         }
 
+
+        public bool IsBayAvailable(int id)
+        {
+            return _db.DockingBay.Any(d => d.ShipId == id && d.ShipId == 0);
+        }
+
         public DockingBay? GetById(int id)
         {
             return _db.DockingBay.FirstOrDefault(d => d.Id == id);
@@ -42,6 +48,18 @@ namespace Starbase.StationOps.Repositories
         {
             _db.DockingBay.Remove(dockingBay);
             _db.SaveChanges();
+        }
+
+        public bool DockShip(int id)
+        {
+            _db.SaveChanges();
+            return true;
+        }
+
+        public bool UndockShip(int id)
+        {
+            _db.SaveChanges();
+            return true;
         }
     }
 }

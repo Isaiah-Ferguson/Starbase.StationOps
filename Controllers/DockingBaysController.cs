@@ -26,6 +26,14 @@ namespace Starbase.StationOps.Controllers
             return Ok(_dockingbays.GetAll());
         }
 
+        [HttpGet("Available")]
+        public ActionResult<List<DockingBayReadDto>> IsBayAvailable()
+        {
+            List<DockingBayReadDto> openbays = _dockingbays.GetAll();
+            return Ok(openbays);
+        }
+
+
         [HttpGet("{id}")]
         public ActionResult<DockingBayReadDto> GetById(int id)
         {
@@ -88,6 +96,55 @@ namespace Starbase.StationOps.Controllers
             _dockingbays.Delete(id);
             return NoContent();
         }
+
+
+        [HttpPut("{id}/dock/{shipId}")]
+
+        public ActionResult<DockingBayReadDto> Dock(int BayId,int ShipId)
+
+        {
+            bool dock = _dockingbays.IsBayAvailable(ShipId);
+
+            if (dock == null || BayId == null)
+            {
+                return NotFound("This Ship Does Not Exist or this Docking Bay is not Available....");
+            }
+
+            return Ok("This Ship has been Docked");
+
+        }
+
+        [HttpPut("{id}/undock/{shipId}")]
+  
+        public ActionResult<DockingBayReadDto> Undock(int BayId, int ShipId)
+        {
+            bool undock = _dockingbays.IsBayAvailable(ShipId);
+
+            if (undock == null || BayId == null)
+            {
+                return NotFound("This Ship Does Not Exist or this Docking Bay is not Available....");
+            }
+
+            return Ok();
+        }
+
+        [HttpGet("by-ship/{shipId}")]
+
+        public ActionResult<DockingBayReadDto> Return(int shipId)
+        {
+            DockingBayReadDto? returnBay = _dockingbays.GetAll().FirstOrDefault(b => b.ShipId == shipId);
+            if (returnBay == null)
+            {
+                return NotFound("No Docking Bay Found for this Ship....");
+            }
+
+            return Ok(returnBay); 
+
+            
+        }
+        
+
+
 
     }
 }

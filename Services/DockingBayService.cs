@@ -25,6 +25,14 @@ namespace Starbase.StationOps.Services
             .ToList();
         }
 
+
+        public bool IsBayAvailable(int id)
+        {
+            var dockingBay = _repository.GetAll().Where(d => d.ShipId == 0).OrderBy(d => d.BayNumber).ToList();
+
+            return dockingBay != null;
+        }
+
         public DockingBayReadDto? GetById(int id)
         {
             DockingBay? dockingBay = _repository.GetById(id);
@@ -84,8 +92,32 @@ namespace Starbase.StationOps.Services
             }
         }
 
+        public bool DockShip(int ShipId)
+        {
+            var dock = _repository.GetById(ShipId);
 
+            if (dock == null)
+            {
+                return false;
+            }
 
+            dock.dShip = true;
+            dock.uShip = false;
+            return true;
+        }
+
+        public bool UndockShip(int ShipId)
+        {
+            var undock = _repository.GetById(ShipId);
+            if (undock == null)
+            {
+                return false;
+            }
+
+            undock.uShip = true;
+            undock.dShip = false;
+            return true;
+        }
 
         //Helper Method
         private static DockingBayReadDto ToReadDto(DockingBay dockingBay)
